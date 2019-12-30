@@ -1,8 +1,5 @@
-from urllib.parse import urlparse
 import asyncio
 import json
-import os
-import sqlite3
 import sys
 
 from aiohttp import web
@@ -11,17 +8,7 @@ from aiohttp_security import check_permission, \
     setup as setup_security, SessionIdentityPolicy
 from aiohttp_security.abc import AbstractAuthorizationPolicy
 from aiohttp_session import SimpleCookieStorage, session_middleware
-from aioyagmail import AIOSMTP
 import aiosqlite
-
-
-oauth2_file = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop',
-                           "client_secret.json")
-""" This class uses the asynch gmail in order to respond the registration process of the login registration of the user.
-    It is assumed that the user is from the kingdom hall. The sound operator is responsibible for accepting the user into the sysgtem
-    and making sure that the name that is displayed to the conductor on the third screen is short and meaningful enough.
-
-"""
 
 
 class WebLogin(AbstractAuthorizationPolicy):
@@ -266,18 +253,6 @@ h3.mc-text-danger  {
     async def create_schema(self):
         async with aiosqlite.connect(self.dbname) as conn:
             await conn.executescript(self.schema_sql)
-
-    async def send_registration_link(self, email_to):
-        # walks you through oauth2 process if no file at this location
-        async with AIOSMTP('ucphinni', oauth2_file=oauth2_file) as yag:
-            await yag.send(to=email_to, subject="Welcome to KHServer",
-                           contents=None)
-
-    async def send_confirmation(self, email_to):
-        # walks you through oauth2 process if no file at this location
-        async with AIOSMTP('ucphinni', oauth2_file=oauth2_file) as yag:
-            await yag.send(to=email_to, subject="Welcome to KHServer",
-                           contents=None)
 
     async def handler_root(self, request):
         if self.index_html is None:
