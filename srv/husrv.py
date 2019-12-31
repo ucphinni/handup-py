@@ -7,7 +7,6 @@ import ssl
 import sys
 
 from aiohttp import web
-import aiohttp
 from aiohttp_security import check_permission, \
     is_anonymous, remember, forget, \
     setup as setup_security, SessionIdentityPolicy
@@ -16,15 +15,16 @@ from aiohttp_session import get_session
 from aiohttp_session import session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from aiohttp_sse import sse_response
-import aiosqlite
 from cryptography import fernet
 from sqlalchemy import Column, Integer, Text, String, Boolean, DateTime, ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
-
-
+import aiohttp
+import aiosqlite
 import upnpy
+
+
 # from string import letters
 dbname = 'cf9.sqlite'
 engine = create_engine('sqlite:///' + dbname, echo=True)
@@ -1049,7 +1049,8 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
     $.ajax({
         type: 'POST',
         url: BookIt.Settings.signInUrl,
-        data: "email=" + emailAddress + "&password=" +  CryptoJS.SHA512(emailAddress.trim().toLowerCase()+password),
+        data: "email=" + emailAddress + "&password=" + \
+         CryptoJS.SHA512(emailAddress.trim().toLowerCase()+password),
         dataType: "json",
         success: function (resp) {
 
@@ -1057,10 +1058,6 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
             if (resp.redirect) {
                 // data.redirect contains the string URL to redirect to
                 window.location.href = data.redirect;
-/*            }
-            if (resp.success === true) {
-              $.mobile.navigate('/app');
-                return; */
             } else {
                 if (resp.extras.msg) {
                     switch (resp.extras.msg) {
@@ -1071,7 +1068,8 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
                             break;
                         case BookIt.ApiMessages.INVALID_PWD:
                         case BookIt.ApiMessages.EMAIL_NOT_FOUND:
-                            me.$ctnErr.html("<p>You entered a wrong username or password.  Please try again.</p>");
+                            me.$ctnErr.html("<p>You entered a wrong username"+\
+                            " or password.  Please try again.</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
                             me.$txtEmailAddress.addClass(invalidInputStyle);
                             break;
@@ -1083,13 +1081,15 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
             $.mobile.loading("hide");
             console.log(e.message);
             // TODO: Use a friendlier error message below.
-            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not log you on.  Please try again in a few minutes.</p>");
+            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not log"+\
+            " you on.  Please try again in a few minutes.</p>");
             me.$ctnErr.addClass("bi-ctn-err").slideDown();
         },
         error:  function (jqXHR, timeout, message) {
             var contentType = jqXHR.getResponseHeader("Content-Type");
             $.mobile.loading("hide");
-            if (jqXHR.status === 200 && contentType.toLowerCase().indexOf("text/html") >= 0) {
+            if (jqXHR.status === 200 && \
+            contentType.toLowerCase().indexOf("text/html") >= 0) {
                 // assume that our login has expired - reload our current page
                 // window.location.reload();
                 window.location.href = '/#apps'
@@ -1100,7 +1100,7 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
                 me.$ctnErr.addClass("bi-ctn-err").slideDown();
 
             }
-        },
+        },W
     });
 };
 """
@@ -1372,6 +1372,11 @@ BookIt.SignUpController.prototype.onSignUpCommand = function () {
         raise redirect_response
 
     async def handler(self, request):
+        if request.path == '/display_handsup':
+            return web.Response(
+                text=DISPLAY_HANDS_UP_HTML,
+                content_type='text/html')
+
         if await is_anonymous(request):
             raise web.HTTPFound('/#page-signin')
 
@@ -1385,10 +1390,6 @@ BookIt.SignUpController.prototype.onSignUpCommand = function () {
                 text=FRIEND_HANDUP_HTML,
                 content_type='text/html')
 
-        if request.path == '/display_handsup':
-            return web.Response(
-                text=DISPLAY_HANDS_UP_HTML,
-                content_type='text/html')
         if request.path == '/friend_handup/post':
             if request.body_exists:
                 msg = await request.text()
@@ -1522,29 +1523,33 @@ async def handle_process(process):
 class KuttItShortner:
     baseurl = 'https://kutt.it'
 
-    def __init__(self, apikey, client=None):
-        self.headers, self.client = {'X-API-Key': apikey}, client
+    def __init__(self, apikey, session=None):
+        self.headers, self.client = {'X-API-Key': apikey}, session
 
-    async def deleteurl(self, _id, client=None, domain=None):
+    async def delete_customurl(self, _id, session=None, domain=None):
         data = {'id': _id} if domain is None else {'id': _id, 'domain': domain}
 
-        return await self._cli_post(self.baseurl + '/api/url/deleteurl', client, data)
+        return await self._cli_post(self.baseurl + '/api/url/delete_customurl',
+                                    session, data)
 
-    async def submiturl(self, _id, target, client=None, reuse=False, password=None):
+    async def submiturl(self, _id, target, session=None, reuse=False,
+                        password=None):
         data = {'customurl': _id, 'target': target, 'reuse': reuse}
         if password is not None:
             data.update({'password': password})
 
-        return await self._cli_post(self.baseurl + '/api/url/submit', client, data)
+        return await self._cli_post(self.baseurl + '/api/url/submit',
+                                    session, data)
 
     async def _cli_post(self, url, cli, data):
-        async def _cli_post2(url, client, hdrs, data):
-            async with client.post(url, headers=hdrs, json=data) as resp:
+
+        async def _cli_post2(url, session, hdrs, data):
+            async with session.post(url, headers=hdrs, json=data) as resp:
                 return await resp.json()
 
         if cli is None or self.client is None:
-            async with aiohttp.ClientSession() as client:
-                return await _cli_post2(url, client, self.headers, data)
+            async with aiohttp.ClientSession() as session:
+                return await _cli_post2(url, session, self.headers, data)
 
         return await _cli_post2(url, self.client, self.headers, data)
 
