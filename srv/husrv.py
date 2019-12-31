@@ -221,8 +221,9 @@ class IGdMgr:
                 raise TypeError()
         except Exception:
             raise
-        self.addaction, delaction, exiaction, exisrvact, addsrvact, delsrvact = None, None, None, None, None, None
-       # self.ext_ip = await service.get_external_ip_address()
+        self.addaction, delaction, exiaction, exisrvact, addsrvact, delsrvact \
+            = None, None, None, None, None, None
+        # self.ext_ip = await service.get_external_ip_address()
         self.local_ip = self.get_lan_ip(self.local_bind_ip)
         self.running = True
         done = False
@@ -239,7 +240,8 @@ class IGdMgr:
                 elif action.name == 'GetExternalIPAddress':
                     exiaction = action
                     exisrvact = service
-                if addsrvact == delsrvact and addsrvact is not None and addsrvact == exisrvact:
+                if addsrvact == delsrvact and addsrvact is not None \
+                        and addsrvact == exisrvact:
                     done = True
                     break
             if done:
@@ -271,10 +273,9 @@ class IGdMgr:
 
     async def run(self):
         self.setup()
-        service = None
         self.running = True
         try:
-            service, add_act, del_act, exi_act = self.igd_getadddelportacts()
+            _, add_act, del_act, exi_act = self.igd_getadddelportacts()
             add_args = add_populate(add_act)
             add_act(**add_args)
             exi_ip = exi_act()
@@ -299,7 +300,7 @@ FRIEND_HANDUP_HTML = """
     $( "#item" ).bind("vmouseup",function(e) {
         $.ajax({
             type: 'POST',
-            url: BookIt.Settings.handUpUrl,
+            url: HandsUp.Settings.handUpUrl,
             data: "-",
             dataType: "json",
             success: function (resp) {
@@ -313,7 +314,7 @@ FRIEND_HANDUP_HTML = """
         }).bind("vmousedown", function(e) {
         $.ajax({
             type: 'POST',
-            url: BookIt.Settings.handUpUrl,
+            url: HandsUp.Settings.handUpUrl,
             data: "+",
             dataType: "json",
             success: function (resp) {
@@ -454,7 +455,7 @@ h3.mc-text-danger  {
         </div><!-- /header -->
         <div role="main" class="ui-content">
             <h2 class="mc-text-center">Registration Succeeded</h2>
-            <p class="mc-top-margin-1-5">Congratulations!  You are now registered with BookIt.</p>
+            <p class="mc-top-margin-1-5">Congratulations!  You are now registered with HandsUp.</p>
             <a href="sign-in.html" class="ui-btn ui-btn-b ui-corner-all">Sign In</a>
             <p></p>
         </div><!-- /content -->
@@ -688,7 +689,7 @@ function includeHTML() {
         </div><!-- /header -->
         <div role="main" class="ui-content">
             <h2 class="bi-text-center">Registration Succeeded</h2>
-            <p class="bi-top-margin-1-5">Congratulations!  You are now registered with BookIt.</p>
+            <p class="bi-top-margin-1-5">Congratulations!  You are now registered with HandsUp.</p>
             <a href="#page-signin" class="ui-btn ui-btn-b ui-corner-all">Sign In</a>
             <p></p>
         </div><!-- /content -->
@@ -862,21 +863,21 @@ function includeHTML() {
         print("script>>", script)
         if script == 'settings.js':
             x = """
-var BookIt = BookIt || {};
-BookIt.Settings = BookIt.Settings || {};
-BookIt.Settings.signUpUrl = location.protocol + "//"+location.host+"/post/sign-up";
-BookIt.Settings.signInUrl = location.protocol + "//"+location.host+"/post/sign-in";
-BookIt.Settings.handUpUrl = location.protocol + "//"+location.host+"/friend_handup/post";
+var HandsUp = HandsUp || {};
+HandsUp.Settings = HandsUp.Settings || {};
+HandsUp.Settings.signUpUrl = location.protocol + "//"+location.host+"/post/sign-up";
+HandsUp.Settings.signInUrl = location.protocol + "//"+location.host+"/post/sign-in";
+HandsUp.Settings.handUpUrl = location.protocol + "//"+location.host+"/friend_handup/post";
 
 """
         elif script == 'api-messages.js':
             x = """
 var BookIt = BookIt || {};
-BookIt.ApiMessages = BookIt.ApiMessages || {};
+HandsUp.ApiMessages = HandsUp.ApiMessages || {};
 """
 
             def add(var, val):
-                return "BookIt.ApiMessages." + var + '=' + str(val) + ";\n"
+                return "HandsUp.ApiMessages." + var + '=' + str(val) + ";\n"
             x += add('EMAIL_NOT_FOUND', self.EMAIL_NOT_FOUND)
             x += add('INVALID_PWD', self.INVALID_PWD)
             x += add('DB_ERROR', self.DB_ERROR)
@@ -923,8 +924,8 @@ $(document).on("mobileinit", function (event, ui) {
     $.mobile.defaultPageTransition = "slide";
 });
 
-app.signUpController = new BookIt.SignUpController();
-app.signInController = new BookIt.SignInController();
+app.signUpController = new HandsUp.SignUpController();
+app.signInController = new HandsUp.SignInController();
 
 $(document).on("pagecontainerbeforeshow", function (event, ui) {
     if (typeof ui.toPage == "object") {
@@ -965,7 +966,7 @@ $(document).delegate("#page-signin", "pagebeforecreate", function () {
             x = """
 var BookIt = BookIt || {};
 
-BookIt.SignInController = function () {
+HandsUp.SignInController = function () {
 
     this.$signInPage = null;
     this.bookingsPageId = null;
@@ -976,7 +977,7 @@ BookIt.SignInController = function () {
     this.$chkKeepSignedIn = null;
 };
 
-BookIt.SignInController.prototype.init = function () {
+HandsUp.SignInController.prototype.init = function () {
     this.$signInPage = $("#page-signin");
     this.bookingsPageId = "#page-bookings";
     this.$btnSubmit = $("#btn-submit", this.$signInPage);
@@ -986,12 +987,12 @@ BookIt.SignInController.prototype.init = function () {
     this.$chkKeepSignedIn = $("#chk-keep-signed-in", this.$signInPage);
 };
 
-BookIt.SignInController.prototype.emailAddressIsValid = function (email) {
+HandsUp.SignInController.prototype.emailAddressIsValid = function (email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
 };
 
-BookIt.SignInController.prototype.resetSignInForm = function () {
+HandsUp.SignInController.prototype.resetSignInForm = function () {
 
     var invisibleStyle = "bi-invisible",
         invalidInputStyle = "bi-invalid-input";
@@ -1006,7 +1007,7 @@ BookIt.SignInController.prototype.resetSignInForm = function () {
 
 };
 
-BookIt.SignInController.prototype.onSignInCommand = function () {
+HandsUp.SignInController.prototype.onSignInCommand = function () {
 
     var me = this,
         emailAddress = me.$txtEmailAddress.val().trim(),
@@ -1048,7 +1049,7 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
 
     $.ajax({
         type: 'POST',
-        url: BookIt.Settings.signInUrl,
+        url: HandsUp.Settings.signInUrl,
         data: "email=" + emailAddress + "&password=" + \
          CryptoJS.SHA512(emailAddress.trim().toLowerCase()+password),
         dataType: "json",
@@ -1061,13 +1062,13 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
             } else {
                 if (resp.extras.msg) {
                     switch (resp.extras.msg) {
-                        case BookIt.ApiMessages.DB_ERROR:
+                        case HandsUp.ApiMessages.DB_ERROR:
                         // TODO: Use a friendlier error message below.
                             me.$ctnErr.html("<p>Oops! BookIt had a problem and could not log you on.  Please try again in a few minutes.</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
                             break;
-                        case BookIt.ApiMessages.INVALID_PWD:
-                        case BookIt.ApiMessages.EMAIL_NOT_FOUND:
+                        case HandsUp.ApiMessages.INVALID_PWD:
+                        case HandsUp.ApiMessages.EMAIL_NOT_FOUND:
                             me.$ctnErr.html("<p>You entered a wrong username"+\
                             " or password.  Please try again.</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
@@ -1111,7 +1112,7 @@ BookIt.SignInController.prototype.onSignInCommand = function () {
             x = """
 var BookIt = BookIt || {};
 
-BookIt.SignUpController = function () {
+HandsUp.SignUpController = function () {
 
     this.$signUpPage = null;
     this.$btnSubmit = null;
@@ -1126,7 +1127,7 @@ BookIt.SignUpController = function () {
     this.$ckbBap = null;
 };
 
-BookIt.SignUpController.prototype.init = function () {
+HandsUp.SignUpController.prototype.init = function () {
     this.$signUpPage = $("#page-signup");
     this.$btnSubmit = $("#btn-submit", this.$signUpPage);
     this.$ctnErr = $("#ctn-err", this.$signUpPage);
@@ -1140,21 +1141,21 @@ BookIt.SignUpController.prototype.init = function () {
 
 };
 
-BookIt.SignUpController.prototype.passwordsMatch = function (password, passwordConfirm) {
+HandsUp.SignUpController.prototype.passwordsMatch = function (password, passwordConfirm) {
     return password === passwordConfirm;
 };
 
-BookIt.SignUpController.prototype.passwordIsComplex = function (password) {
+HandsUp.SignUpController.prototype.passwordIsComplex = function (password) {
     // TODO: implement complex password rules here.  There should be similar rule on the server side.
     return true;
 };
 
-BookIt.SignUpController.prototype.emailAddressIsValid = function (email) {
+HandsUp.SignUpController.prototype.emailAddressIsValid = function (email) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
 };
 
-BookIt.SignUpController.prototype.resetSignUpForm = function () {
+HandsUp.SignUpController.prototype.resetSignUpForm = function () {
 
     var invisibleStyle = "bi-invisible",
         invalidInputStyle = "bi-invalid-input";
@@ -1175,7 +1176,7 @@ BookIt.SignUpController.prototype.resetSignUpForm = function () {
 
 };
 
-BookIt.SignUpController.prototype.onSignUpCommand = function () {
+HandsUp.SignUpController.prototype.onSignUpCommand = function () {
     this.$rbtnGender = $("#rc-gender :radio:checked", this.$signUpPage);
 
     var me = this,
@@ -1245,7 +1246,7 @@ BookIt.SignUpController.prototype.onSignUpCommand = function () {
 
     if (!me.passwordIsComplex(password)) {
         // TODO: Use error message to explain password rules.
-        me.$ctnErr.html("<p>Your password is very easy to guess.  Please try a more complex password.</p>");
+        me.$ctnErr.html("<p>Your password is very easy to guess. Please try a more complex password.</p>");
         me.$ctnErr.addClass("bi-ctn-err").slideDown();
         me.$txtPassword.addClass(invalidInputStyle);
         me.$txtPasswordConfirm.addClass(invalidInputStyle);
@@ -1257,7 +1258,7 @@ BookIt.SignUpController.prototype.onSignUpCommand = function () {
 
     $.ajax({
         type: 'POST',
-        url: BookIt.Settings.signUpUrl,
+        url: HandsUp.Settings.signUpUrl,
         data: data,
         success: function (resp) {
 
@@ -1268,19 +1269,19 @@ BookIt.SignUpController.prototype.onSignUpCommand = function () {
             } else {
                 if (resp.extras.msg) {
                     switch (parseInt(resp.extras.msg)) {
-                        case BookIt.ApiMessages.DB_ERROR:
-                        case BookIt.ApiMessages.COULD_NOT_CREATE_USER:
+                        case HandsUp.ApiMessages.DB_ERROR:
+                        case HandsUp.ApiMessages.COULD_NOT_CREATE_USER:
                             // TODO: Use a friendlier error message below.
                             me.$ctnErr.html("<p>Oops! BookIt had a problem and could not register you.  Please try again in a few minutes.</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
                             break;
-                        case BookIt.ApiMessages.EMAIL_ALREADY_EXISTS:
+                        case HandsUp.ApiMessages.EMAIL_ALREADY_EXISTS:
                             me.$ctnErr.html("<p>The email address that you provided is already registered.</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
                             me.$txtEmailAddress.addClass(invalidInputStyle);
                             break;
                         default:
-                            me.$ctnErr.html("<p>Unknown Error "+BookIt.ApiMessages.EMAIL_ALREADY_EXIST+".</p>");
+                            me.$ctnErr.html("<p>Unknown Error "+HandsUp.ApiMessages.EMAIL_ALREADY_EXIST+".</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
                     }
                 }
