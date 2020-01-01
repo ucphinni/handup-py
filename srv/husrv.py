@@ -450,7 +450,7 @@ h3.mc-text-danger  {
 """ + std_header_html + """
 </head>
 <body>
-    <div data-role="page" data-bookit-page="index">
+    <div data-role="page" data-handsup-page="index">
         <div data-role="header" data-theme="c">
             <h1>Book It</h1>
         </div><!-- /header -->
@@ -627,7 +627,7 @@ function includeHTML() {
 <body>
     <div data-role="page" id="page-index">
         <div data-role="header" data-theme="c" data-position="fixed">
-            <h1>BookIt</h1>
+            <h1>HandsUp</h1>
         </div><!-- /header -->
         <div role="main" class="ui-content">
             <h2 class="bi-text-center">Welcome!</h2>
@@ -874,7 +874,7 @@ HandsUp.Settings.handUpUrl = location.protocol + "//"+location.host+"/friend_han
 """
         elif script == 'api-messages.js':
             x = """
-var BookIt = BookIt || {};
+var HandsUp = HandsUp || {};
 HandsUp.ApiMessages = HandsUp.ApiMessages || {};
 """
 
@@ -889,7 +889,7 @@ HandsUp.ApiMessages = HandsUp.ApiMessages || {};
             print(x)
         elif script == 'index.js':
             x = """
-var BookIt = BookIt || {};
+var HandsUp = HandsUp || {};
 
 // Begin boilerplate code generated with Cordova project.
 
@@ -966,7 +966,7 @@ $(document).delegate("#page-signin", "pagebeforecreate", function () {
 """
         elif script == 'signin-controller.js':
             x = """
-var BookIt = BookIt || {};
+var HandsUp = HandsUp || {};
 
 HandsUp.SignInController = function () {
 
@@ -1066,7 +1066,7 @@ HandsUp.SignInController.prototype.onSignInCommand = function () {
                     switch (resp.extras.msg) {
                         case HandsUp.ApiMessages.DB_ERROR:
                         // TODO: Use a friendlier error message below.
-                            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not log you on.  Please try again in a few minutes.</p>");
+                            me.$ctnErr.html("<p>Oops! HandsUp had a problem and could not log you on.  Please try again in a few minutes.</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
                             break;
                         case HandsUp.ApiMessages.INVALID_PWD:
@@ -1084,7 +1084,7 @@ HandsUp.SignInController.prototype.onSignInCommand = function () {
             $.mobile.loading("hide");
             console.log(e.message);
             // TODO: Use a friendlier error message below.
-            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not log"+\
+            me.$ctnErr.html("<p>Oops! HandsUp had a problem and could not log"+\
             " you on.  Please try again in a few minutes.</p>");
             me.$ctnErr.addClass("bi-ctn-err").slideDown();
         },
@@ -1099,7 +1099,7 @@ HandsUp.SignInController.prototype.onSignInCommand = function () {
             }
             else
             {
-                me.$ctnErr.html("<p>Oops! BookIt had a problem and could not log you on.  Please try again in a few minutes.</p>");
+                me.$ctnErr.html("<p>Oops! HandsUp had a problem and could not log you on.  Please try again in a few minutes.</p>");
                 me.$ctnErr.addClass("bi-ctn-err").slideDown();
 
             }
@@ -1112,7 +1112,7 @@ HandsUp.SignInController.prototype.onSignInCommand = function () {
 """
         elif script == 'signup-controller.js':
             x = """
-var BookIt = BookIt || {};
+var HandsUp = HandsUp || {};
 
 HandsUp.SignUpController = function () {
 
@@ -1274,7 +1274,7 @@ HandsUp.SignUpController.prototype.onSignUpCommand = function () {
                         case HandsUp.ApiMessages.DB_ERROR:
                         case HandsUp.ApiMessages.COULD_NOT_CREATE_USER:
                             // TODO: Use a friendlier error message below.
-                            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not register you.  Please try again in a few minutes.</p>");
+                            me.$ctnErr.html("<p>Oops! HandsUp had a problem and could not register you.  Please try again in a few minutes.</p>");
                             me.$ctnErr.addClass("bi-ctn-err").slideDown();
                             break;
                         case HandsUp.ApiMessages.EMAIL_ALREADY_EXISTS:
@@ -1292,7 +1292,7 @@ HandsUp.SignUpController.prototype.onSignUpCommand = function () {
         error: function (e) {
             console.log(e.message);
             // TODO: Use a friendlier error message below.
-            me.$ctnErr.html("<p>Oops! BookIt had a problem and could not register you.  Please try again in a few minutes.</p>");
+            me.$ctnErr.html("<p>Oops! HandsUp had a problem and could not register you.  Please try again in a few minutes.</p>");
             me.$ctnErr.addClass("bi-ctn-err").slideDown();
         }
     });
