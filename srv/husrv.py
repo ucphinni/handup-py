@@ -7,7 +7,7 @@ import ssl
 import sys
 
 from aiohttp import web
-from aiohttp_security import check_permission, \
+from aiohttp_security import \
     is_anonymous, remember, forget, \
     setup as setup_security, SessionIdentityPolicy
 from aiohttp_security.abc import AbstractAuthorizationPolicy
@@ -16,7 +16,8 @@ from aiohttp_session import session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from aiohttp_sse import sse_response
 from cryptography import fernet
-from sqlalchemy import Column, Integer, Text, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, Text, String, Boolean, DateTime
+from sqlalchemy import ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
@@ -664,6 +665,8 @@ function includeHTML() {
             <input type="text" name="txt-last-name" id="txt-last-name" value="">
             <label for="txt-email-address">Email Address</label>
             <input type="text" name="txt-email-address" id="txt-email-address" value="">
+            <label for="txt-regcode">Registration Code</label>
+            <input type="password" name="txt-regcode" id="txt-regcode" value="">
             <label for="txt-password">Password</label>
             <input type="password" name="txt-password" id="txt-password" value="">
             <label for="txt-password-confirm">Confirm Password</label>
@@ -707,7 +710,6 @@ function includeHTML() {
             <label for="txt-password">Password</label>
             <input type="password" name="txt-password" id="txt-password" value="">
             <a href="#dlg-invalid-credentials" data-rel="popup" data-transition="pop" data-position-to="window" id="btn-submit" class="ui-btn ui-btn-b ui-corner-all bi-top-margin-1-5">Submit</a>
-            <p class="bi-top-margin-1-5"><a href="#begin-password-reset-page">Can't access your account?</a></p>
         </div><!-- /content -->
     </div><!-- /page -->
     <div data-role="page" id="apps">
