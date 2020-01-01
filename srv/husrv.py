@@ -7,6 +7,7 @@ import ssl
 import sys
 
 from aiohttp import web
+import aiohttp
 from aiohttp_security import \
     is_anonymous, remember, forget, \
     setup as setup_security, SessionIdentityPolicy
@@ -15,14 +16,13 @@ from aiohttp_session import get_session
 from aiohttp_session import session_middleware
 from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from aiohttp_sse import sse_response
+import aiosqlite
 from cryptography import fernet
 from sqlalchemy import Column, Integer, Text, String, Boolean, DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
-import aiohttp
-import aiosqlite
 import upnpy
 
 
@@ -794,7 +794,7 @@ function includeHTML() {
                 return json_resp(self.DB_ERROR)
         elif pname == 'sign-in':
             data = await request.post()
-            pw, pwsalt, name, email, firstname, lastname, roles = None, None, None, None, None, None, None
+            pw, pwsalt, name, email, firstname, lastname, roles = None
             try:
                 async with db.execute('''select passwordhash,passwordsalt,name,email,firstname,lastname,roles from user where email = ?''', (data['email'],)) as cur:
                     row = await cur.fetchone()
@@ -1103,7 +1103,7 @@ HandsUp.SignInController.prototype.onSignInCommand = function () {
                 me.$ctnErr.addClass("bi-ctn-err").slideDown();
 
             }
-        },W
+        }
     });
 };
 """
