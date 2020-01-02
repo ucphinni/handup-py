@@ -41,16 +41,6 @@ class ServerSSL(Base):
     key_str = Column(Text)
 
 
-class SSHConnection(Base):
-    __tablename__ = 'sshconnection'
-    id = Column(Integer, primary_key=True)
-    hostname = Column(Text)
-    public_key = Column(Text)
-    private_key = Column(Text)
-    host_fingerprint = Column(Text, nullable=True)
-    username = Column(Text)
-
-
 class Profile(Base):
     __tablename__ = 'profile'
     id = Column(Integer, primary_key=True)
@@ -68,9 +58,6 @@ class Profile(Base):
     private_port = Column(Integer, default=8081)
     private_ssl_id = Column(Integer, ForeignKey('serverssl.id'), nullable=True)
     private_ssl = relationship('ServerSSL', foreign_keys=[private_ssl_id])
-
-#    reachmessh_id =         Column(Integer,ForeignKey('sshconnection.id'),       nullable = True)
-#    reachmessh =            relationship('SSHConnection',foreign_keys=[reachmessh_id])
 
     hand_raise_service = Column(Boolean, default=True)
     tinycc_api_str = Column(
@@ -794,7 +781,8 @@ function includeHTML() {
                 return json_resp(self.DB_ERROR)
         elif pname == 'sign-in':
             data = await request.post()
-            pw, pwsalt, name, email, firstname, lastname, roles = None
+            pw, pwsalt, name, email, firstname, lastname, roles = \
+                None, None, None, None, None, None, None
             try:
                 async with db.execute('''select passwordhash,passwordsalt,name,email,firstname,lastname,roles from user where email = ?''', (data['email'],)) as cur:
                     row = await cur.fetchone()
