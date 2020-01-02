@@ -771,8 +771,9 @@ function includeHTML() {
                     if row is not None:
                         print("email already registered", data['email'])
                         return json_resp(self.EMAIL_ALREADY_EXISTS)
-                async with db.execute('''insert into user (email,firstname,lastname,passwordhash) values (?,?,?,?)''',
-                                      (data['email'], data['firstName'], data['lastName'], data['password'])):
+                async with db.execute('''insert into user (email,firstname,lastname,passwordhash,gender,is_baptized,cong_id) values (?,?,?,?,?,?,?)''',
+                                      (data['email'], data['firstName'], data['lastName'], data['password'],
+                                       data['gender'], data['bap'], data['cong'])):
                     await db.commit()
 
                     return json_resp()
